@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Art Gallery Showcase</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f7f9;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 40px;
+            font-size: 36px;
+            font-weight: 700;
+        }
+        #upload-form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 40px;
+            padding: 25px;
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        #upload-form input[type="text"],
+        #upload-form input[type="file"] {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #ced4da;
+            border-radius: 10px;
+            font-size: 16px;
+            background-color: #f8f9fa;
+            transition: all 0.3s;
+        }
+        #upload-form input[type="text"]:focus,
+        #upload-form input[type="file"]:focus {
+            border-color: #4c88f7;
+            background-color: #fff;
+        }
+        #upload-form button {
+            padding: 15px 25px;
+            background-color: #4c88f7;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            width: 100%;
+        }
+        #upload-form button:hover {
+            background-color: #357ae8;
+        }
+        #gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        .art-card {
+            background-color: #fff;
+            border: none;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
+        .art-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+        }
+        .art-card img {
+            max-width: 100%;
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+        .art-card h2 {
+            font-size: 22px;
+            color: #444;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .comment-section {
+            margin-top: 10px;
+            padding-top: 10px;
+            display: flex;
+            flex-direction: column;
+            border-top: 1px solid #e9ecef;
+        }
+        .comment-section input {
+            width: 90%;
+            padding: 10px;
+            margin-bottom: 12px;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            font-size: 14px;
+            background-color: #f1f3f5;
+            transition: all 0.3s ease;
+        }
+        .comment-section input:focus {
+            border-color: #357ae8;
+            background-color: #fff;
+        }
+        .comment-section button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            align-self: flex-start;
+            transition: background-color 0.3s ease;
+        }
+        .comment-section button:hover {
+            background-color: #218838;
+        }
+        .comments {
+            margin-top: 12px;
+            max-height: 120px;
+            overflow-y: auto;
+            font-size: 14px;
+            color: #555;
+            border-top: 1px solid #e9ecef;
+            padding-top: 12px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 10px;
+            box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.06);
+        }
+        .comments div {
+            margin-bottom: 10px;
+            font-size: 15px;
+            color: #333;
+        }
+        .like-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .like-section button {
+            padding: 10px 20px;
+            background-color: #ff4757;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+        .like-section button:hover {
+            background-color: #ff3142;
+        }
+        .like-count {
+            margin-left: 16px;
+            font-size: 16px;
+            color: #444;
+        }
+        .delete-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 8px 12px;
+            background-color: #ff4757;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background-color 0.3s ease;
+        }
+        .delete-btn:hover {
+            background-color: #ff3142;
+        }
+        @media (max-width: 768px) {
+            #upload-form, .art-card {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Art Gallery Showcase</h1>
+
+    <div id="upload-form">
+        <input type="text" id="art-title" placeholder="Art Title" required>
+        <input type="file" id="art-image" accept="image/*" required>
+        <button onclick="uploadArt()">Upload Art</button>
+    </div>
+
+    <div id="gallery"></div>
+
+    <script>
+        const gallery = document.getElementById('gallery');
+        const storedArt = JSON.parse(localStorage.getItem('artGallery')) || [];
+
+        // Function to display the artwork cards
+        function displayArt() {
+            gallery.innerHTML = '';
+            storedArt.forEach((art, index) => {
+                const artCard = document.createElement('div');
+                artCard.className = 'art-card';
+
+                const img = document.createElement('img');
+                img.src = art.image;
+                img.alt = art.title;
+
+                const titleElement = document.createElement('h2');
+                titleElement.textContent = art.title;
+
+                const deleteButton = document.createElement('button');
+                deleteButton.className = 'delete-btn';
+                deleteButton.textContent = 'Delete';
+                deleteButton.onclick = () => {
+                    storedArt.splice(index, 1);  // Remove the post at the current index
+                    localStorage.setItem('artGallery', JSON.stringify(storedArt));
+                    displayArt();  // Refresh the gallery after deletion
+                };
+
+                const commentSection = document.createElement('div');
+                commentSection.className = 'comment-section';
+
+                const commentInput = document.createElement('input');
+                commentInput.placeholder = 'Leave a comment...';
+
+                const commentButton = document.createElement('button');
+                commentButton.textContent = 'Comment';
+                commentButton.onclick = () => {
+                    const commentText = commentInput.value;
+                    if (commentText) {
+                        art.comments.push(commentText);
+                        localStorage.setItem('artGallery', JSON.stringify(storedArt));
+                        displayArt();
+                    }
+                };
+
+                const commentsDiv = document.createElement('div');
+                commentsDiv.className = 'comments';
+                art.comments.forEach(comment => {
+                    const commentElem = document.createElement('div');
+                    commentElem.textContent = comment;
+                    commentsDiv.appendChild(commentElem);
+                });
+
+                commentSection.appendChild(commentInput);
+                commentSection.appendChild(commentButton);
+                commentSection.appendChild(commentsDiv);
+
+                const likeSection = document.createElement('div');
+                likeSection.className = 'like-section';
+
+                const likeButton = document.createElement('button');
+                likeButton.textContent = 'Like';
+                likeButton.onclick = () => {
+                    art.likes++;
+                    localStorage.setItem('artGallery', JSON.stringify(storedArt));
+                    displayArt();
+                };
+
+                const likeCount = document.createElement('div');
+                likeCount.className = 'like-count';
+                likeCount.textContent = `${art.likes} Likes`;
+
+                likeSection.appendChild(likeButton);
+                likeSection.appendChild(likeCount);
+
+                artCard.appendChild(img);
+                artCard.appendChild(titleElement);
+                artCard.appendChild(deleteButton);
+                artCard.appendChild(commentSection);
+                artCard.appendChild(likeSection);
+
+                gallery.appendChild(artCard);
+            });
+        }
+
+        // Function to upload art and display in the gallery
+        function uploadArt() {
+            const title = document.getElementById('art-title').value;
+            const imageFile = document.getElementById('art-image').files[0];
+
+            if (!title || !imageFile) return;
+
+            getBase64(imageFile, (base64Image) => {
+                const newArt = {
+                    title: title,
+                    image: base64Image,
+                    comments: [],
+                    likes: 0
+                };
+
+                storedArt.push(newArt);
+                localStorage.setItem('artGallery', JSON.stringify(storedArt));
+                displayArt();
+            });
+
+            // Clear form after upload
+            document.getElementById('art-title').value = '';
+            document.getElementById('art-image').value = '';
+        }
+
+        // Function to convert image file to Base64
+        function getBase64(file, callback) {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => callback(reader.result);
+            reader.onerror = (error) => console.log('Error: ', error);
+        }
+
+        // Initial display of stored art
+        displayArt();
+    </script>
+
+</body>
+</html>
